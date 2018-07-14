@@ -1,12 +1,11 @@
 package com.marin.stock.dbservice.resource;
 
+import com.marin.stock.dbservice.model.Quotes;
 import com.marin.stock.dbservice.repository.QuotesRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/rest/db")
@@ -17,9 +16,15 @@ public class DbServiceResource {
     @GetMapping("/{username}")
     public List<String> getQuotes(@PathVariable("username") final String username) {
 
-        quotesRepository.findByUserName(username);
+        return quotesRepository.findByUserName(username).stream().map(quote -> {
+            return quote.getQuote();
+        }).collect(Collectors.toList());
 
-        return null;
+    }
+
+    @PostMapping("/add")
+    public List<String> add(@RequestBody final Quotes quotes) {
+        return  null;
     }
 
 }
