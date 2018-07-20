@@ -13,6 +13,11 @@ public class DbServiceResource {
 
     private QuotesRepository quotesRepository;
 
+    public DbServiceResource(QuotesRepository quotesRepository) {
+        this.quotesRepository = quotesRepository;
+    }
+
+
     @GetMapping("/{username}")
     public List<String> getQuotes(@PathVariable("username") final String username) {
 
