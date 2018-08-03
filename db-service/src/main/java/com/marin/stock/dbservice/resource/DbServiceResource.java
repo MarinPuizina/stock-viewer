@@ -1,5 +1,6 @@
 package com.marin.stock.dbservice.resource;
 
+import com.marin.stock.dbservice.model.Quote;
 import com.marin.stock.dbservice.model.Quotes;
 import com.marin.stock.dbservice.repository.QuotesRepository;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,13 @@ public class DbServiceResource {
 
     @PostMapping("/add")
     public List<String> add(@RequestBody final Quotes quotes) {
+
+        quotes.getQuotes().
+                stream().
+                forEach(quote -> {
+                    quotesRepository.save(new Quote(quotes.getUserName(), quote));
+                });
+
         return  null;
     }
 
