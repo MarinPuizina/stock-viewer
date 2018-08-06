@@ -22,22 +22,38 @@ public class DbServiceResource {
     @GetMapping("/{username}")
     public List<String> getQuotes(@PathVariable("username") final String username) {
 
-        return quotesRepository.findByUserName(username).stream().map(quote -> {
-            return quote.getQuote();
-        }).collect(Collectors.toList());
+        return getQuotesByUserName(username);
 
     }
+
 
     @PostMapping("/add")
     public List<String> add(@RequestBody final Quotes quotes) {
 
         quotes.getQuotes().
-                stream().
-                forEach(quote -> {
-                    quotesRepository.save(new Quote(quotes.getUserName(), quote));
-                });
+        stream().
+        map(quote -> new Quote(quotes.getUserName(), quote)).
+        forEach(quote -> quotesRepository.save(quote));
 
-        return  null;
+        return  getQuotesByUserName(quotes.getUserName());
+    }
+
+
+    @PostMapping("/delete/{username}")
+    public List<String> delete(@PathVariable("username") final String username) {
+
+        List<Quote> quotes = quotesRepository.findByUserName(username);
+        quotesRepository.delete(quotes);
+
+        return getQuotesByUserName(username);
+
+    }
+
+
+    private List<String> getQuotesByUserName(@PathVariable("username") String username) {
+        return quotesRepository.findByUserName(username).stream().map(quote -> {
+            return quote.getQuote();
+        }).collect(Collectors.toList());
     }
 
 }
